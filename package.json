@@ -2,6 +2,7 @@
   "name": "cloudwatch",
   "version": "1.0.0",
   "description": "Cloudwatch alarm test",
+  "repository": "https://github.com/shankarhpatel/cloudwatch-alarm",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
