@@ -1,0 +1,16 @@
+{
+  "name": "cloudwatch",
+  "version": "1.0.0",
+  "description": "Cloudwatch alarm test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cloudwatch",
+    "alarm",
+    "api-gateway"
+  ],
+  "author": "Shankar Patel",
+  "license": "ISC"
+}
