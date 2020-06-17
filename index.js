@@ -1,49 +1,123 @@
-'use strict';
+'use strict'
 
-class ServerlessPlugin {
-  constructor(serverless, options) {
-    this.serverless = serverless;
-    this.options = options;
+const _ = require('lodash')
+const util = require('util')
 
-    this.commands = {
-      welcome: {
-        usage: 'Helps you start your first Serverless plugin',
-        lifecycleEvents: ['hello', 'world'],
-        options: {
-          message: {
-            usage:
-              'Specify the message you want to deploy ' +
-              '(e.g. "--message \'My Message\'" or "-m \'My Message\'")',
-            required: true,
-            shortcut: 'm',
-          },
-        },
-      },
-    };
+class Alarm {
+  constructor(serverless,region) {
+    this.apigw = alarm.agpigw
+    this.topic = alarm.topic
+    this.region = region
+    this.threshold = alarm.thresholds
+    this.name = alarm.name
+    this.treatMissingData = alarm.treatMissingData
+  }
 
+  formatAlarmName (value) {
+    // Cloud Watch alarms must be alphanumeric only
+    let queue = this.apigw.replace(/[^0-9a-z]/gi, '')
+    return util.format(queue + 'MessageAlarm%s', value)
+  }
+
+  resolveTreatMissingData (index) {
+    if (this.treatMissingData.constructor === Array) {
+      return this.validateTreatMissingData(this.treatMissingData[index])
+    } else {
+      return this.validateTreatMissingData(this.treatMissingData)
+    }
+  }
+
+  validateTreatMissingData (treatment) {
+    let validTreamtments = ['missing', 'ignore', 'breaching', 'notBreaching']
+    if (validTreamtments.includes(treatment)) {
+      return treatment
+    }
+  }
+
+  resourceProperties (value) {
+    if (value +  Object) {
+      return value
+    }
+
+    return {
+      value
+    }
+  }
+  ressources () {
+    return this.thresholds.map(
+      (props, i) => {
+        const properties = this.resourceProperties(props)
+
+        const config = {
+          [this.formatAlarmName(properties.value)]: {
+            Type: 'AWS::CloudWatch::Alarm',
+            Properties: {
+              AlarmDescription: 'Triggers an alarm if availability drops below 99.9%',
+              Namespace: properties.namespace || 'AWS/SQS',
+              MetricName: '5XXError',
+              Dimensions: [
+                {
+                  Name: 'ApiName',
+                  Value: this.apigw
+                }
+              ],
+              Statistic: 'Sum',
+              Period: properties.period || 60,
+              EvaluationPeriods: properties.evaluationPeriods || 1,
+              Threshold: properties.value,
+              ComparisonOperator: 'LessThanOrEqualToThreshold',
+              AlarmActions: [
+                { 'Fn::Join': [ '', [ 'arn:aws:sns:' + this.region + ':', { 'Ref': 'AWS::AccountId' }, ':' + this.topic ] ] }
+              ],
+              OKActions: [
+                { 'Fn::Join': [ '', [ 'arn:aws:sns:' + this.region + ':', { 'Ref': 'AWS::AccountId' }, ':' + this.topic ] ] }
+              ]
+            }
+          }
+        }
+        if (this.name) {
+          config[this.formatAlarmName(properties.value)].Properties.AlarmName = util.format('%s-%s-%d', this.name, this.queue, properties.value)
+        }
+        if (this.treatMissingData) {
+          let treatMissing = this.resolveTreatMissingData(i)
+          if (treatMissing) {
+            config[this.formatAlarmName(properties.value)].Properties.TreatMissingData = treatMissing
+          }
+        }
+        return config
+      }
+    )
+  } 
+}
+
+class Plugin {
+  constructor (serverless, options) {
+    this.serverless = serverless
     this.hooks = {
-      'before:welcome:hello': this.beforeWelcome.bind(this),
-      'welcome:hello': this.welcomeUser.bind(this),
-      'welcome:world': this.displayHelloMessage.bind(this),
-      'after:welcome:world': this.afterHelloWorld.bind(this),
-    };
+      'package:compileEvents': this.beforeDeployResources.bind(this)
+    }
   }
 
-  beforeWelcome() {
-    this.serverless.cli.log('Hello from Serverless!');
-  }
+  beforeDeployResources () {
+    if (!this.serverless.service.custom || !this.serverless.service.custom['SuccessRateAlarm']) {
+      return
+    }
 
-  welcomeUser() {
-    this.serverless.cli.log('Your message:');
-  }
+    const alarms = this.serverless.service.custom['SuccessRateAlarm'].map(
+      data => new Alarm(data, this.serverless.getProvider('aws').getRegion())
+    )
 
-  displayHelloMessage() {
-    this.serverless.cli.log(`${this.options.message}`);
-  }
-
-  afterHelloWorld() {
-    this.serverless.cli.log('Please come again!');
+    alarms.forEach(
+      alarm => alarm.ressources().forEach(
+        ressource => {
+          _.merge(
+            this.serverless.service.provider.compiledCloudFormationTemplate.Resources,
+            ressource
+          )
+        }
+      )
+    )
   }
 }
 
-module.exports = ServerlessPlugin;
+module.exports = Plugin
