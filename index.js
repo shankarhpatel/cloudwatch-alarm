@@ -53,7 +53,7 @@ class Alarm {
             Type: 'AWS::CloudWatch::Alarm',
             Properties: {
               AlarmDescription: 'Triggers an alarm if availability drops below 99.9%',
-              Namespace: properties.namespace || 'AWS/SQS',
+              Namespace: 'AWS/ApiGateway',
               MetricName: '5XXError',
               Dimensions: [
                 {
