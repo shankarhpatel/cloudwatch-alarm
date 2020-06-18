@@ -1,5 +1,5 @@
 {
-  "name": "cloudwatch",
+  "name": "success-rate-alarm",
   "version": "1.0.0",
   "description": "Cloudwatch alarm test",
   "repository": "https://github.com/shankarhpatel/cloudwatch-alarm",
