@@ -8,7 +8,7 @@ class Alarm {
     this.apigw = alarm.agpigw
     this.topic = alarm.topic
     this.region = region
-    this.threshold = alarm.thresholds
+    this.thresholds = alarm.thresholds
     this.name = alarm.name
     this.treatMissingData = alarm.treatMissingData
   }
