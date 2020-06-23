@@ -120,6 +120,4 @@ class Plugin {
   }
 }
 
-serverless.cli.log('Testing')
-
 module.exports = Plugin
