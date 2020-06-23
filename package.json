@@ -1,6 +1,6 @@
 {
   "name": "success-rate-alarm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cloudwatch alarm test",
   "repository": "https://github.com/shankarhpatel/cloudwatch-alarm",
   "main": "index.js",
