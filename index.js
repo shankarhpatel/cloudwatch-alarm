@@ -4,7 +4,7 @@ const _ = require('lodash')
 const util = require('util')
 
 class Alarm {
-  constructor(serverless,region) {
+  constructor(alarm,region) {
     this.apigw = alarm.agpigw
     this.topic = alarm.topic
     this.region = region
@@ -35,7 +35,7 @@ class Alarm {
   }
 
   resourceProperties (value) {
-    if (value +  Object) {
+    if (value instanceof  Object) {
       return value
     }
 
