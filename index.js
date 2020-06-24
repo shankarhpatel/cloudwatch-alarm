@@ -5,7 +5,7 @@ const util = require('util')
 
 class Alarm {
   constructor(alarm,region) {
-    this.apigw = alarm.agpigw
+    this.apigw = alarm.apigw
     this.topic = alarm.topic
     this.region = region
     this.thresholds = alarm.thresholds
