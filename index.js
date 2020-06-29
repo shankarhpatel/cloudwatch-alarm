@@ -2,10 +2,11 @@
 
 const _ = require('lodash')
 const util = require('util')
+const { count } = require('console')
 
 class Alarm {
   constructor(alarm,region) {
-    this.apigw = alarm.agpigw
+    this.apigw = alarm.apigw
     this.topic = alarm.topic
     this.region = region
     this.thresholds = alarm.thresholds
@@ -53,16 +54,55 @@ class Alarm {
             Type: 'AWS::CloudWatch::Alarm',
             Properties: {
               AlarmDescription: 'Triggers an alarm if availability drops below 99.9%',
-              Namespace: 'AWS/ApiGateway',
-              MetricName: '5XXError',
-              Dimensions: [
-                {
-                  Name: 'ApiName',
-                  Value: this.apigw
-                }
-              ],
-              Statistic: 'Sum',
-              Period: properties.period || 60,
+              Metrics: [{
+                Id: 'e1',
+                Label: 'Success Rate',
+                Expression: '100-100*(m1/m2)'
+              },
+              { Id: 'm1',
+                Label: '5XX-error-rate',
+                MetricStat:{
+                  Metric: {
+                    MetricName: '5XXError',
+                    Namespace: 'AWS/ApiGateway',
+                    Dimensions:[ {
+                      Name: 'ApiName',
+                      Value: '${self:provider.stage}-${self:service}'
+                    }, 
+                    {
+                      Name: 'Stage',
+                      Value: '${self:provider.stage}'
+                    }
+                  ],
+                  },
+                  Stat: 'Sum',
+                  Period: '900'
+                },
+                ReturnData: 'false'
+              },
+              {
+                Id: 'm2',
+                Label: 'count',
+                MetricStat:{
+                  Metric: {
+                    MetricName: 'Count',
+                    Namespace: 'AWS/ApiGateway',
+                    Dimensions:[ {
+                      Name: 'ApiName',
+                      Value: '${self:provider.stage}-${self:service}'
+                    }, 
+                    {
+                      Name: 'Stage',
+                      Value: '${self:provider.stage}'
+                    }
+                  ],
+                  },
+                  Stat: 'Sum',
+                  Period: '900'
+                },
+                ReturnData: 'false'
+              },
+            ],
               EvaluationPeriods: properties.evaluationPeriods || 1,
               Threshold: properties.value,
               ComparisonOperator: 'LessThanOrEqualToThreshold',
