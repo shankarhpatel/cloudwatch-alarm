@@ -2,7 +2,6 @@
 
 const _ = require('lodash')
 const util = require('util')
-const { count } = require('console')
 
 class Alarm {
   constructor(alarm,region) {

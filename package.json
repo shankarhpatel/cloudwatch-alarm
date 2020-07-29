@@ -1,6 +1,6 @@
 {
   "name": "success-rate-alarm",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Cloudwatch alarm test",
   "repository": "https://github.com/shankarhpatel/cloudwatch-alarm",
   "main": "index.js",
@@ -15,7 +15,7 @@
   "author": "Shankar Patel",
   "license": "ISC",
   "dependencies": {
-    "utils": "^0.3.1",
+    "util": "^0.3.1",
     "lodash": "^4.17.4"
   }
 }
