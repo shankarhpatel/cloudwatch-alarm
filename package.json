@@ -1,21 +1,20 @@
 {
-  "name": "success-rate-alarm",
-  "version": "1.1.4",
-  "description": "Cloudwatch alarm test",
-  "repository": "https://github.com/shankarhpatel/cloudwatch-alarm",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "cloudwatch",
-    "alarm",
-    "api-gateway"
-  ],
-  "author": "Shankar Patel",
-  "license": "ISC",
-  "dependencies": {
-    "utils": "^0.3.1",
-    "lodash": "^4.17.4"
-  }
-}
+    "name": "success-rate-alarm",
+    "version": "1.1.8",
+    "description": "SuccessRateAlarm triggers if availability drops below 99.9% ",
+    "dependencies": {
+        "lodash": "^4.17.19",
+        "success-rate-alarm": "^1.1.8",
+        "util": "^0.12.3",
+        "yarn": "^1.22.4"
+    },
+    "devDependencies": {
+        "aws-sdk": "2.536.0"
+    },
+    "license": "UNLICENSED",
+    "author": "Shankar Patel",
+    "scripts": {
+        "deploy": "sls deploy",
+        "remove": "sls remove",
+        "deploy:dev:us-east-1": "run-s deploy:dev:us-east-1:*"
+    }

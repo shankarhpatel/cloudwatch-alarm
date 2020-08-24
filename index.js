@@ -2,7 +2,6 @@
 
 const _ = require('lodash')
 const util = require('util')
-const { count } = require('console')
 
 class Alarm {
   constructor(alarm,region) {
@@ -16,7 +15,9 @@ class Alarm {
 
   formatAlarmName (value) {
     // Cloud Watch alarms must be alphanumeric only
-    let apigw = this.apigw.replace(/[^0-9a-z]/gi, '')
+   // let apigw = this.apigw.replace(/[^0-9a-z'.']/gi, '')
+    let apigw = this.apigw.replace(/[^a-z0-9\.]/gi)
+    console.log(value)
     return util.format(apigw + 'MessageAlarm%s', value)
   }
 
