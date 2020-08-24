@@ -18,3 +18,4 @@
         "remove": "sls remove",
         "deploy:dev:us-east-1": "run-s deploy:dev:us-east-1:*"
     }
+}
