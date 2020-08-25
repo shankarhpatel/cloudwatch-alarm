@@ -15,10 +15,8 @@ class Alarm {
 
   formatAlarmName (value) {
     // Cloud Watch alarms must be alphanumeric only
-   // let apigw = this.apigw.replace(/[^0-9a-z'.']/gi, '')
-    let apigw = this.apigw.replace(/[^a-z0-9\.]/gi)
-    console.log(value)
-    return util.format(apigw + 'MessageAlarm%s', value)
+    let apigw = this.apigw.replace(/[^0-9a-z'.']/gi, '')
+    return util.format(apigw + 'SuccessRateAlarm')
   }
 
   resolveTreatMissingData (index) {
@@ -117,7 +115,7 @@ class Alarm {
           }
         }
         if (this.name) {
-          config[this.formatAlarmName(properties.value)].Properties.AlarmName = util.format('%s-%s-%d', this.name, this.apigw, properties.value)
+          config[this.formatAlarmName(properties.value)].Properties.AlarmName = util.format('%s-%s', this.name, this.apigw)
         }
         if (this.treatMissingData) {
           let treatMissing = this.resolveTreatMissingData(i)
