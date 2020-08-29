@@ -16,7 +16,7 @@ class Alarm {
   formatAlarmName (value) {
     // Cloud Watch alarms must be alphanumeric only
     let apigw = this.apigw.replace(/[^0-9a-z'.']/gi, '')
-    return util.format(apigw + 'SuccessRateAlarm')
+    return util.format(apigw + 'MessageAlarm')
   }
 
   resolveTreatMissingData (index) {
