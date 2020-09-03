@@ -1,10 +1,10 @@
 {
     "name": "success-rate-alarm",
-    "version": "1.1.10",
+    "version": "1.1.11",
     "description": "SuccessRateAlarm triggers if availability drops below 99.9% ",
     "dependencies": {
         "lodash": "^4.17.19",
-        "success-rate-alarm": "^1.1.10",
+        "success-rate-alarm": "^1.1.11",
         "util": "^0.12.3",
         "yarn": "^1.22.4"
     },

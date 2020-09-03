@@ -16,7 +16,7 @@ class Alarm {
   formatAlarmName (value) {
     // Cloud Watch alarms must be alphanumeric only
     let apigw = this.apigw.replace(/[^0-9a-z'.']/gi, '')
-    return util.format(apigw + 'MessageAlarm')
+    return util.format(apigw + 'SuccessRateAlarm')
   }
 
   resolveTreatMissingData (index) {
@@ -66,11 +66,11 @@ class Alarm {
                     Namespace: 'AWS/ApiGateway',
                     Dimensions:[ {
                       Name: 'ApiName',
-                      Value: '${self:provider.stage}-${self:service}'
+		      Value: this.apigw + '-' + this.name 
                     }, 
                     {
                       Name: 'Stage',
-                      Value: '${self:provider.stage}'
+		      Value: this.apigw
                     }
                   ],
                   },
@@ -88,11 +88,11 @@ class Alarm {
                     Namespace: 'AWS/ApiGateway',
                     Dimensions:[ {
                       Name: 'ApiName',
-                      Value: '${self:provider.stage}-${self:service}'
+		      Value: this.apigw + '-' + this.name
                     }, 
                     {
                       Name: 'Stage',
-                      Value: '${self:provider.stage}'
+		      Value: this.apigw
                     }
                   ],
                   },
@@ -123,6 +123,7 @@ class Alarm {
             config[this.formatAlarmName(properties.value)].Properties.TreatMissingData = treatMissing
           }
         }
+	console.log(config)
         return config
       }
     )
