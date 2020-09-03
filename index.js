@@ -123,7 +123,6 @@ class Alarm {
             config[this.formatAlarmName(properties.value)].Properties.TreatMissingData = treatMissing
           }
         }
-	console.log(config)
         return config
       }
     )
