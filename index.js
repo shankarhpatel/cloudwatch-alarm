@@ -10,6 +10,7 @@ class Alarm {
     this.region = region
     this.thresholds = alarm.thresholds
     this.name = alarm.name
+    this.title = alarm.title
     this.treatMissingData = alarm.treatMissingData
   }
 
@@ -66,11 +67,11 @@ class Alarm {
                     Namespace: 'AWS/ApiGateway',
                     Dimensions:[ {
                       Name: 'ApiName',
-		      Value: this.apigw + '-' + this.name 
-                    }, 
+                      Value: this.name
+                    },
                     {
                       Name: 'Stage',
-		      Value: this.apigw
+                      Value: this.apigw
                     }
                   ],
                   },
@@ -88,11 +89,11 @@ class Alarm {
                     Namespace: 'AWS/ApiGateway',
                     Dimensions:[ {
                       Name: 'ApiName',
-		      Value: this.apigw + '-' + this.name
-                    }, 
+                      Value: this.name
+                    },
                     {
                       Name: 'Stage',
-		      Value: this.apigw
+                      Value: this.apigw
                     }
                   ],
                   },
@@ -102,7 +103,7 @@ class Alarm {
                 ReturnData: 'false'
               },
             ],
-              EvaluationPeriods: properties.evaluationPeriods || 1,
+              EvaluationPeriods: properties.evaluationPeriods || 3,
               Threshold: properties.value,
               ComparisonOperator: 'LessThanOrEqualToThreshold',
               AlarmActions: [
@@ -115,7 +116,7 @@ class Alarm {
           }
         }
         if (this.name) {
-          config[this.formatAlarmName(properties.value)].Properties.AlarmName = util.format('%s-%s', this.name, this.apigw)
+          config[this.formatAlarmName(properties.value)].Properties.AlarmName = util.format('%s', this.title)
         }
         if (this.treatMissingData) {
           let treatMissing = this.resolveTreatMissingData(i)
@@ -126,7 +127,7 @@ class Alarm {
         return config
       }
     )
-  } 
+  }
 }
 
 class Plugin {
