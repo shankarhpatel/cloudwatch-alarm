@@ -9,7 +9,7 @@
         "yarn": "^1.22.4"
     },
     "devDependencies": {
-        "aws-sdk": "2.536.0"
+        "aws-sdk": "2.1693.0"
     },
     "license": "UNLICENSED",
     "author": "Shankar Patel",
